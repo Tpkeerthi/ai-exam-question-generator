@@ -3,7 +3,7 @@ import { GoogleGenAI } from '@google/genai';
 import { buildPrompt } from '../utils/promptBuilder';
 import { parseResponse } from '../utils/parseResponse';
 
-const ai = new GoogleGenAI({ apiKey: 'AQ.Ab8RN6Inq94hEtRheMjbzv7u9xB5bQimfYkhfzGIQCZPFKYedw' });
+const ai = new GoogleGenAI({ apiKey: 'AQ.Ab8RN6IiscPdVk0WHsnX8XnRk3vEH2O7eG4YgKsCnodTPGTFKA' });
 
 export function useGemini() {
   const [questions, setQuestions] = useState([]);
