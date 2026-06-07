@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { buildPrompt } from '../utils/promptBuilder';
 import { parseResponse } from '../utils/parseResponse';
 
-const API_KEY = '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';
+const API_KEY = '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';
 
 export function useGemini() {
   const [questions, setQuestions] = useState([]);
@@ -16,7 +16,7 @@ export function useGemini() {
 
     try {
       const response = await fetch(
-        'https://openrouter.ai/api/v1/chat/completions',
+        'https://api.groq.com/openai/v1/chat/completions',
         {
           method: 'POST',
           headers: {
@@ -24,7 +24,7 @@ export function useGemini() {
             'Authorization': `Bearer ${API_KEY}`,
           },
           body: JSON.stringify({
-            model: 'google/gemini-2.5-flash',
+            model: 'llama-3.3-70b-versatile',
             messages: [
               {
                 role: 'user',
