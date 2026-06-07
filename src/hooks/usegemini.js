@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { GoogleGenAI } from '@google/genai';
 import { buildPrompt } from '../utils/promptBuilder';
 import { parseResponse } from '../utils/parseResponse';
 
-const ai = new GoogleGenAI({ apiKey: 'AQ.Ab8RN6IiscPdVk0WHsnX8XnRk3vEH2O7eG4YgKsCnodTPGTFKA' });
+const API_KEY = 'AQ.Ab8RN6IiscPdVk0WHsnX8XnRk3vEH2O7eG4YgKsCnodTPGTFKA';
 
 export function useGemini() {
   const [questions, setQuestions] = useState([]);
@@ -16,12 +15,29 @@ export function useGemini() {
     setQuestions([]);
 
     try {
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: buildPrompt(formData),
-      });
+      const response = await fetch(
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`,
+          },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: buildPrompt(formData) }] }]
+          }),
+        }
+      );
 
-      const parsed = parseResponse(response.text);
+      const data = await response.json();
+      console.log('API Response:', data);
+      
+      if (data.error) {
+        throw new Error(data.error.message);
+      }
+
+      const text = data.candidates[0].content.parts[0].text;
+      const parsed = parseResponse(text);
       setQuestions(parsed);
     } catch (err) {
       setError('Something went wrong. Please try again.');
