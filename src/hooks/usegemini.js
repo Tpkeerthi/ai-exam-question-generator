@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { buildPrompt } from '../utils/promptBuilder';
 import { parseResponse } from '../utils/parseResponse';
 
-const API_KEY = 'AQ.Ab8RN6IiscPdVk0WHsnX8XnRk3vEH2O7eG4YgKsCnodTPGTFKA';
+const API_KEY = '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';
 
 export function useGemini() {
   const [questions, setQuestions] = useState([]);
@@ -16,27 +16,33 @@ export function useGemini() {
 
     try {
       const response = await fetch(
-        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+        'https://openrouter.ai/api/v1/chat/completions',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-goog-api-key': API_KEY,
+            'Authorization': `Bearer ${API_KEY}`,
           },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: buildPrompt(formData) }] }]
+            model: 'google/gemini-2.5-flash',
+            messages: [
+              {
+                role: 'user',
+                content: buildPrompt(formData)
+              }
+            ]
           }),
         }
       );
 
       const data = await response.json();
       console.log('API Response:', data);
-      
+
       if (data.error) {
         throw new Error(data.error.message);
       }
 
-      const text = data.candidates[0].content.parts[0].text;
+      const text = data.choices[0].message.content;
       const parsed = parseResponse(text);
       setQuestions(parsed);
     } catch (err) {
