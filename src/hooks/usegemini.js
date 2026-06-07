@@ -21,7 +21,7 @@ export function useGemini() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${API_KEY}`,
+            'x-goog-api-key': API_KEY,
           },
           body: JSON.stringify({
             contents: [{ parts: [{ text: buildPrompt(formData) }] }]
